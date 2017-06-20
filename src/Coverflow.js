@@ -166,13 +166,13 @@ class Coverflow extends Component {
     } else if (index < current) {
       // Left side
       style['width'] = `${baseWidth}px`;
-      style['transform'] = `translateX(${this.state.move + offset}px) rotateY(40deg)`;
+      style['transform'] = `translateX(${this.state.move + offset}px) rotateY(${this.props.rotateYPre}deg)`;
       style['zIndex'] = `${10 - depth}`;
       style['opacity'] = opacity;
     } else if (index > current) {
       // Right side
       style['width'] = `${baseWidth}px`;
-      style['transform'] = ` translateX(${this.state.move + offset}px) rotateY(-40deg)`;
+      style['transform'] = ` translateX(${this.state.move + offset}px) rotateY(${this.props.rotateYNext}deg)`;
       style['zIndex'] = `${10 - depth}`;
       style['opacity'] = opacity;
     }
@@ -318,14 +318,18 @@ Coverflow.propTypes = {
   navigation: React.PropTypes.bool,
   enableHeading: React.PropTypes.bool,
   enableScroll: React.PropTypes.bool,
-  active: React.PropTypes.number
+  active: React.PropTypes.number,
+  rotateYPre: React.PropTypes.number,
+  rotateYNext: React.PropTypes.number
 };
 
 Coverflow.defaultProps = {
   navigation: false,
   enableHeading: true,
   enableScroll: true,
-  clickable: true
+  clickable: true,
+  rotateYPre: 40,
+  rotateYNext: -40  
 };
 
 Coverflow.displayName = 'Coverflow';
