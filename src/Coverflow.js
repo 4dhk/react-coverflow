@@ -152,30 +152,43 @@ class Coverflow extends Component {
     let length = React.Children.count(this.props.children);
     let offset = length % 2 === 0 ? -width/10 : 0;
     // Handle opacity
-    let depth = displayQuantityOfSide - Math.abs(current - index);
-    let opacity = depth === 1 ? 0.95 : 0.5;
-    opacity = depth === 2 ? 0.92 : opacity;
-    opacity = depth === 3 ? 0.9 : opacity;
-    opacity = current === index ? 1 : opacity;
+    let depth = Math.abs(current - index);
+    let opacity = 0.5;
+    let zIndex = 10;
+    zIndex = this.props.zOffsetCenter - depth*this.props.zOffsetPerLevel;
+    switch (depth) {
+      case 0: {
+        opacity = 1;
+        break;
+      }
+      case 1: {
+        opacity = 0.95;
+        break;
+      }
+      case 2: {
+        opacity = 0.92;
+        break;
+      }
+      case 3: {
+        opacity = 0.9;
+        break;
+      }
+    }
+
     // Handle translateX
     if (index === current) {
-      style['width'] = `${baseWidth}px`;
       style['transform'] = `translateX(${this.state.move + offset}px) scale(1.2)`;
-      style['zIndex'] = `${10 - depth}`;
-      style['opacity'] = opacity;
     } else if (index < current) {
       // Left side
-      style['width'] = `${baseWidth}px`;
       style['transform'] = `translateX(${this.state.move + offset}px) rotateY(${this.props.rotateYPre}deg)`;
-      style['zIndex'] = `${10 - depth}`;
-      style['opacity'] = opacity;
     } else if (index > current) {
       // Right side
-      style['width'] = `${baseWidth}px`;
-      style['transform'] = ` translateX(${this.state.move + offset}px) rotateY(${this.props.rotateYNext}deg)`;
-      style['zIndex'] = `${10 - depth}`;
-      style['opacity'] = opacity;
+      style['transform'] = ` translateX(${this.state.move + offset}px) rotateY(${this.props.rotateYPre}deg)`;
     }
+    style['width'] = `${baseWidth}px`;
+    style['zIndex'] = zIndex;
+    style['opacity'] = opacity;
+
     return style;
   }
 
@@ -320,7 +333,10 @@ Coverflow.propTypes = {
   enableScroll: React.PropTypes.bool,
   active: React.PropTypes.number,
   rotateYPre: React.PropTypes.number,
-  rotateYNext: React.PropTypes.number
+  rotateYNext: React.PropTypes.number,
+  zOffsetPerLevel:  React.PropTypes.number,
+  zOffsetCenter:  React.PropTypes.number
+
 };
 
 Coverflow.defaultProps = {
@@ -329,7 +345,9 @@ Coverflow.defaultProps = {
   enableScroll: true,
   clickable: true,
   rotateYPre: 40,
-  rotateYNext: -40  
+  rotateYNext: -40,
+  zOffsetPerLevel: 1,
+  zOffsetCenter: 10
 };
 
 Coverflow.displayName = 'Coverflow';
